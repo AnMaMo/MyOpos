@@ -81,6 +81,9 @@ function CorregirPregunta(respuesta, preguntaid){
        <div class="m-auto text-center">
         <PrimaryButton>Guardar Test</PrimaryButton>
        </div>
+       <div class="m-auto text-center">
+        <PrimaryButton>Guardar Test</PrimaryButton>
+       </div>
 
     </div>
 
