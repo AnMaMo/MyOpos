@@ -28,13 +28,10 @@ const showingNavigationDropdown = ref(false);
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Tablero
+                                    Taulell
                                 </NavLink>
                                 <NavLink :href="route('Tests')" :active="route().current('Tests')">
                                     Tests
-                                </NavLink>
-                                <NavLink :href="route('Fisiques')" :active="route().current('Fisiques')">
-                                    Fisiques
                                 </NavLink>
                             </div>
                         </div>
@@ -60,9 +57,9 @@ const showingNavigationDropdown = ref(false);
                                     </template>
 
                                     <template #content>
-                                        <DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>
+                                        <DropdownLink :href="route('profile.edit')"> Perfil </DropdownLink>
                                         <DropdownLink :href="route('logout')" method="post" as="button">
-                                            Log Out
+                                            Tancar sessiò
                                         </DropdownLink>
                                     </template>
                                 </Dropdown>
@@ -95,13 +92,10 @@ const showingNavigationDropdown = ref(false);
                     class="sm:hidden">
                     <div class="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                            Dashboard
+                            Taulell
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('Tests')" :active="route().current('Tests')">
                             Tests
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('Fisiques')" :active="route().current('Fisiques')">
-                            Fisiques
                         </ResponsiveNavLink>
                     </div>
 
@@ -115,9 +109,9 @@ const showingNavigationDropdown = ref(false);
                         </div>
 
                         <div class="mt-3 space-y-1">
-                            <ResponsiveNavLink :href="route('profile.edit')"> Profile </ResponsiveNavLink>
+                            <ResponsiveNavLink :href="route('profile.edit')"> Perfil </ResponsiveNavLink>
                             <ResponsiveNavLink :href="route('logout')" method="post" as="button">
-                                Log Out
+                                Tancar sessiò
                             </ResponsiveNavLink>
                         </div>
                     </div>

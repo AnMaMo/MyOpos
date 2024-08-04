@@ -22,22 +22,16 @@ import { Link } from '@inertiajs/vue3';
 
 
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            <a href="your-link-1" class="w-full h-40 flex items-center justify-center rounded-lg border border-black">
-                <div class="w-3/4 h-3/4 flex items-center justify-center bg-white rounded-lg">
-                    <span class="material-symbols-outlined text-black text-4xl">quiz</span>
-                </div>
-            </a>
-            <a href="your-link-2" class="w-full h-40 flex items-center justify-center rounded-lg border border-black">
-                <div class="w-3/4 h-3/4 flex items-center justify-center bg-white rounded-lg">
-                    <span class="material-symbols-outlined text-black text-4xl">star</span>
-                </div>
+        <div class="flex h-screen">
+            <a href="/Tests" class="m-10 text-center">
+                <span class="material-symbols-outlined text-black" style="font-size: 100px;">quiz</span>
+                <h3 class="text-center">Tests</h3>
             </a>
         </div>
 
 
 
-        
+
 
     </AuthenticatedLayout>
 </template>
