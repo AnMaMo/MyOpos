@@ -2,25 +2,47 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Respuesta extends Model
 {
-    use HasFactory;
-
-    // Especifica el nombre de la tabla si no es la versión pluralizada del nombre del modelo
+    // Si el nombre de la tabla no es plural en inglés, puedes especificarlo aquí
     protected $table = 'respuestas';
 
-    // Especifica los campos que se pueden asignar en masa
+    // Si quieres definir campos que se pueden asignar en masa
     protected $fillable = [
-        'idpregunta', 'respuesta', 'correcta',
+        'pregunta_id',
+        'correcta',
+        'respuesta',
     ];
 
-    // Define la relación con el modelo Pregunta
+    /**
+     * Set the correcta attribute.
+     *
+     * @param  mixed  $value
+     * @return void
+     */
+    public function setCorrectaAttribute($value)
+    {
+        $this->attributes['correcta'] = (int) $value;
+    }
+
+    /**
+     * Set the respuesta attribute.
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function setRespuestaAttribute($value)
+    {
+        $this->attributes['respuesta'] = ucfirst($value);
+    }
+
+    /**
+     * Obtener la pregunta asociada a la respuesta.
+     */
     public function pregunta()
     {
         return $this->belongsTo(Pregunta::class);
     }
-
 }
