@@ -20,7 +20,7 @@ import { Link } from '@inertiajs/vue3';
         </div>
         </Link> -->
 
-        
+
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             <a href="your-link-1" class="w-full h-40 flex items-center justify-center rounded-lg border border-black">
@@ -35,6 +35,7 @@ import { Link } from '@inertiajs/vue3';
             </a>
         </div>
 
+        
 
     </AuthenticatedLayout>
 </template>
