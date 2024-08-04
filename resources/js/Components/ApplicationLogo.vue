@@ -5,5 +5,4 @@
         />
     </svg> -->
     <img src="/media/logo.png" alt="Logo" />
-    
 </template>
