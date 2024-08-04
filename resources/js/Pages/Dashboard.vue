@@ -12,13 +12,56 @@ import { Link } from '@inertiajs/vue3';
 
     <AuthenticatedLayout>
 
-        <Link :href="route('Tests')">
+        <!--         <Link :href="route('Tests')">
         <div class="w-1/5 h-40 flex items-center justify-center text-white border-black-2">
             <span class="material-symbols-outlined">
                 quiz
             </span>
         </div>
-        </Link>
+        </Link> -->
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <a href="your-link-1" class="w-full h-40 flex items-center justify-center rounded-lg border border-black">
+                <div class="w-3/4 h-3/4 flex items-center justify-center bg-white rounded-lg">
+                    <span class="material-symbols-outlined text-black text-4xl">quiz</span>
+                </div>
+            </a>
+            <a href="your-link-2" class="w-full h-40 flex items-center justify-center rounded-lg border border-black">
+                <div class="w-3/4 h-3/4 flex items-center justify-center bg-white rounded-lg">
+                    <span class="material-symbols-outlined text-black text-4xl">star</span>
+                </div>
+            </a>
+            <a href="your-link-3" class="w-full h-40 flex items-center justify-center rounded-lg border border-black">
+                <div class="w-3/4 h-3/4 flex items-center justify-center bg-white rounded-lg">
+                    <span class="material-symbols-outlined text-black text-4xl">settings</span>
+                </div>
+            </a>
+            <a href="your-link-4" class="w-full h-40 flex items-center justify-center rounded-lg border border-black">
+                <div class="w-3/4 h-3/4 flex items-center justify-center bg-white rounded-lg">
+                    <span class="material-symbols-outlined text-black text-4xl">home</span>
+                </div>
+            </a>
+            <a href="your-link-5" class="w-full h-40 flex items-center justify-center rounded-lg border border-black">
+                <div class="w-3/4 h-3/4 flex items-center justify-center bg-white rounded-lg">
+                    <span class="material-symbols-outlined text-black text-4xl">info</span>
+                </div>
+            </a>
+            <a href="your-link-6" class="w-full h-40 flex items-center justify-center rounded-lg border border-black">
+                <div class="w-3/4 h-3/4 flex items-center justify-center bg-white rounded-lg">
+                    <span class="material-symbols-outlined text-black text-4xl">help</span>
+                </div>
+            </a>
+            <a href="your-link-7" class="w-full h-40 flex items-center justify-center rounded-lg border border-black">
+                <div class="w-3/4 h-3/4 flex items-center justify-center bg-white rounded-lg">
+                    <span class="material-symbols-outlined text-black text-4xl">contact_mail</span>
+                </div>
+            </a>
+            <a href="your-link-8" class="w-full h-40 flex items-center justify-center rounded-lg border border-black">
+                <div class="w-3/4 h-3/4 flex items-center justify-center bg-white rounded-lg">
+                    <span class="material-symbols-outlined text-black text-4xl">feedback</span>
+                </div>
+            </a>
+        </div>
 
 
     </AuthenticatedLayout>
