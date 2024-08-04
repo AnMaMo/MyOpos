@@ -13,7 +13,7 @@ import { Link } from '@inertiajs/vue3';
     <AuthenticatedLayout>
 
         <Link :href="route('Tests')">
-        <div class="w-1/5 h-40 flex items-center justify-center text-white border-black-1">
+        <div class="w-1/5 h-40 flex items-center justify-center text-white border-black-2">
             <span class="material-symbols-outlined">
                 quiz
             </span>
