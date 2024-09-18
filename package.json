@@ -16,5 +16,10 @@
         "tailwindcss": "^3.2.1",
         "vite": "^5.0",
         "vue": "^3.4.0"
+    },
+    "dependencies": {
+        "datatables.net": "^2.1.6",
+        "datatables.net-dt": "^2.1.6",
+        "jquery": "^3.7.1"
     }
 }

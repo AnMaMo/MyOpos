@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, ref } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 
@@ -72,13 +72,15 @@ function CorregirPregunta(respuesta, preguntaid) {
       </div>
 
 
+      <p>{{ arrayExample }}</p>
+
       <!-- botones Test -->
       <div class="flex mt-10">
         <div class="m-auto text-center">
           <PrimaryButton>Descarta Test</PrimaryButton>
         </div>
         <div class="m-auto text-center">
-          <PrimaryButton>Guardar Test</PrimaryButton>
+          <PrimaryButton @click="CerrarTest()">Guardar Test</PrimaryButton>
         </div>
 
       </div>

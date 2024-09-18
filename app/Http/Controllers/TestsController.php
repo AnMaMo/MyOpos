@@ -12,13 +12,15 @@ class TestsController extends Controller
 {
     public function index()
     {
+        // Cojemos todas las preguntas de la BBDD que tengan por lo menos una respuesta.
         $preguntas = Pregunta::with('respuestas')->get();
-        //TODO poner que coja 30 preguntas
-        $preguntasAleatorias = $preguntas->shuffle()->take(2);
+        
+        // Cojemos una pregunta aleatoria de todas las preguntas existentes.
+        $preguntaAleatorias = $preguntas->shuffle()->take(1);
 
         // Retornar la vista con los datos
-        return Inertia::render('Tests/TestActivo', [
-            'preguntas' => $preguntasAleatorias
+        return Inertia::render('Tests/TestsIndex', [
+            'pregunta' => $preguntaAleatorias
         ]);
     }
 }
