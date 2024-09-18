@@ -42,9 +42,18 @@ function CorregirPregunta(respuesta, preguntaid) {
     document.getElementById("ExplicacionPregunta").classList.add("visible");
 }
 
-
+// Funcion para recargar una pagina
 function RecargarPagina() {
     window.location.reload()
+}
+
+// Funcion para mezclar un array
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]]; // Intercambia elementos
+  }
+  return array;
 }
 
 </script>
@@ -63,7 +72,7 @@ function RecargarPagina() {
         <!-- Apartado donde se muestra la pregunta y sus respuestas -->
         <h3 class="text-xl font-bold">{{ preguntaActual.enunciado }}</h3>
         <ol class="list-inside list-alpha pl-5">
-            <li v-for="respuesta in preguntaActual.respuestas" :id="respuesta.id"
+            <li v-for="respuesta in shuffleArray(preguntaActual.respuestas)" :id="respuesta.id"
                 class="cursor-pointer border w-11/12 p-3 rounded-md m-2 shadow"
                 :class="{ 'is-it': respuesta.correcta == 1 }" :data-id="preguntaActual.id"
                 @click="CorregirPregunta(respuesta.id, preguntaActual.id)">
