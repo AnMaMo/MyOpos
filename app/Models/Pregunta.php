@@ -9,11 +9,7 @@ class Pregunta extends Model
     // Si el nombre de la tabla no es plural en inglés, puedes especificarlo aquí
     protected $table = 'preguntas';
 
-    // Si quieres definir campos que se pueden asignar en masa
-    protected $fillable = [
-        'enunciado',
-        'fallada',
-    ];
+    protected $fillable = ['enunciado', 'explicacion', 'respuestas'];
 
     /**
      * Set the enunciado attribute.

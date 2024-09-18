@@ -21,5 +21,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::post('/crear-pregunta', [PreguntasController::class, 'crearPregunta']);
+Route::post('/eliminar-pregunta', [PreguntasController::class, 'eliminarPregunta']);
+
 // Mantener las rutas de autenticación (login y register)
 require __DIR__.'/auth.php';

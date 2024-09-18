@@ -16,7 +16,7 @@ class CreatePreguntasTable extends Migration
         Schema::create('preguntas', function (Blueprint $table) {
             $table->id(); // id autonumérico
             $table->text('enunciado'); // texto
-            $table->integer('fallada'); // numérico
+            $table->text('explicacion'); // texto
             $table->timestamps(); // campos created_at y updated_at
         });
     }

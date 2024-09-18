@@ -17,15 +17,15 @@ class PreguntaSeeder extends Seeder
         DB::table('preguntas')->insert([
             [
                 'enunciado' => '¿Cuál es la capital de Francia?',
-                'fallada' => 0,
+                'explicacion' => 'Explicacion de francia',
             ],
             [
                 'enunciado' => '¿Cuál es el resultado de 2 + 2?',
-                'fallada' => 0,
+                'fallada' => 'Explicacion de 2+2',
             ],
             [
                 'enunciado' => '¿En qué año llegó el hombre a la luna?',
-                'fallada' => 0,
+                'fallada' => 'Explicacion hombre luna',
             ],
         ]);
     }

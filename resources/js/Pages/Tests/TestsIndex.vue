@@ -4,33 +4,42 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 const props = defineProps({
-  pregunta: Array
+    pregunta: Array
 });
+
+// Acceder al primer elemento del array "pregunta"
+var preguntaActual = props.pregunta[0];
+
+console.log(preguntaActual);
 
 function CorregirPregunta(respuesta, preguntaid) {
 
-  var respuestaDOM = document.getElementById(respuesta);
+    var respuestaDOM = document.getElementById(respuesta);
 
-  if (respuestaDOM.classList.contains("Disabled")) {
-    return;
-  }
+    if (respuestaDOM.classList.contains("Disabled")) {
+        return;
+    }
 
-  if (respuestaDOM.classList.contains("is-it")) {
-    respuestaDOM.style.backgroundColor = '#7ee279';
-    //Aqui
-  } else {
-    respuestaDOM.style.backgroundColor = '#ec6363';
-  }
+    if (respuestaDOM.classList.contains("is-it")) {
+        respuestaDOM.style.backgroundColor = '#7ee279';
+        //Aqui
+    } else {
+        respuestaDOM.style.backgroundColor = '#ec6363';
+    }
 
-  // Seleccionar todos los elementos con el data-id igual a preguntaid
-  var elements = document.querySelectorAll(`[data-id='${preguntaid}']`);
-  console.log(elements);
+    // Seleccionar todos los elementos con el data-id igual a preguntaid
+    var elements = document.querySelectorAll(`[data-id='${preguntaid}']`);
+    console.log(elements);
 
-  // Remover el evento de clic de cada uno de esos elementos
-  elements.forEach(function (element) {
-    element.style.cursor = 'default';
-    element.classList.add("Disabled");
-  });
+    // Remover el evento de clic de cada uno de esos elementos
+    elements.forEach(function (element) {
+        element.style.cursor = 'default';
+        element.classList.add("Disabled");
+    });
+
+    // Mostrar la explicacion de las preguntas
+    document.getElementById("ExplicacionPregunta").classList.remove("hidden");
+    document.getElementById("ExplicacionPregunta").classList.add("visible");
 }
 
 
@@ -43,50 +52,40 @@ function RecargarPagina() {
 <style scoped>
 /* Asegura que la lista de respuestas esté en letras minúsculas */
 .list-alpha {
-  list-style-type: lower-alpha;
+    list-style-type: lower-alpha;
 }
 </style>
 
 <template>
 
-  <GuestLayout>
-
-    <div class=" w-11/12 m-auto">
-      <!-- Cargar preguntas y respuestas -->
-      <div class="p-4">
-        <ol class="list-decimal pl-5">
-          <li v-for="(pregunta, index) in pregunta" :key="pregunta.id" class="mt-5">
-            <h3 class="text-xl font-bold">{{ pregunta.enunciado }}</h3>
-            <ol class="list-inside list-alpha pl-5">
-              <li v-for="respuesta in pregunta.respuestas" :id="respuesta.id" class="cursor-pointer border w-11/12 p-3 rounded-md m-2 shadow"
-                :class="{ 'is-it': respuesta.correcta == 1 }" :data-id="pregunta.id"
-                @click="CorregirPregunta(respuesta.id, pregunta.id)">
+    <GuestLayout>
+        
+        <!-- Apartado donde se muestra la pregunta y sus respuestas -->
+        <h3 class="text-xl font-bold">{{ preguntaActual.enunciado }}</h3>
+        <ol class="list-inside list-alpha pl-5">
+            <li v-for="respuesta in preguntaActual.respuestas" :id="respuesta.id"
+                class="cursor-pointer border w-11/12 p-3 rounded-md m-2 shadow"
+                :class="{ 'is-it': respuesta.correcta == 1 }" :data-id="preguntaActual.id"
+                @click="CorregirPregunta(respuesta.id, preguntaActual.id)">
                 {{ respuesta.respuesta }}
-              </li>
-            </ol>
-          </li>
+            </li>
         </ol>
-      </div>
 
-
-      <div class="hidden">
-
-        <h2 class="text-xl">Explicacion pregunta</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iste, aliquam. Facere, accusamus voluptate cupiditate corporis aperiam sapiente voluptatum aliquid suscipit quod laboriosam, laudantium, nostrum harum consectetur? Eius at sunt eaque dolores iure nesciunt odio nemo fuga, pariatur ad! Vel expedita blanditiis explicabo ipsa non cumque deleniti quibusdam commodi quo porro.</p>
-
-      </div>
-
-
-      <!-- botones Test -->
-      <div class="flex mt-10">
-        <div class="m-auto text-center">
-          <PrimaryButton @click="RecargarPagina()">Siguiente pregunta</PrimaryButton>
+        <!-- Apartado explicacion de la pregunta -->
+        <div class="hidden" id="ExplicacionPregunta">
+            <h2 class="text-xl mt-5">Explicacion pregunta</h2>
+            <p>{{ preguntaActual.explicacion }}</p>
         </div>
 
-      </div>
+        <!-- Boton pagina siguiente Test -->
+        <div class="flex mt-10">
+            <div class="m-auto text-center">
+                <PrimaryButton @click="RecargarPagina()">Siguiente pregunta</PrimaryButton>
+            </div>
 
-    </div>
+        </div>
 
-</GuestLayout>
+
+    </GuestLayout>
 
 </template>
