@@ -119,7 +119,7 @@ function EliminarPregunta(idpregunta) {
                     <tbody>
                         <tr v-for="(respuesta, index) in respuestas" :key="index">
                             <td>{{ respuesta.respuesta }}</td>
-                            <td>{{ respuesta.correcta === 1 ? 'Sí' : 'No' }}</td>
+                            <td>{{ respuesta.correcta === 1 ? 'Si' : 'No' }}</td>
                         </tr>
                     </tbody>
                 </table>
