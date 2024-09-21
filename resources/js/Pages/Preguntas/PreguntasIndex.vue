@@ -162,6 +162,7 @@ function editarPregunta(idpregunta) {
                         <tr>
                             <th>ID</th>
                             <th>Enunciado</th>
+                            <th>Explicación</th>
                             <th>Herramientas</th>
                         </tr>
                     </thead>
@@ -169,6 +170,7 @@ function editarPregunta(idpregunta) {
                         <tr v-for="pregunta in preguntas" :key="pregunta.id">
                             <td>{{ pregunta.id }}</td>
                             <td>{{ pregunta.enunciado }}</td>
+                            <td>{{ pregunta.explicacion }}</td>
                             <td>
                                 <PrimaryButton @click="EliminarPregunta(pregunta.id)">Eliminar</PrimaryButton>
                                 <!-- <PrimaryButton @click="editarPregunta(pregunta.id)">Editar</PrimaryButton> -->
