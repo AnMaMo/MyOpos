@@ -23,6 +23,9 @@ Route::middleware('auth')->group(function () {
 
 Route::post('/crear-pregunta', [PreguntasController::class, 'crearPregunta']);
 Route::post('/eliminar-pregunta', [PreguntasController::class, 'eliminarPregunta']);
+Route::get('/preguntas', [PreguntasController::class, 'getAllPreguntas']);
+Route::get('/pregunta/{id}', [PreguntasController::class, 'getSinglePregunta']);
+
 
 // Mantener las rutas de autenticación (login y register)
 require __DIR__.'/auth.php';

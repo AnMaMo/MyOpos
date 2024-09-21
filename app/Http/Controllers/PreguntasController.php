@@ -70,5 +70,19 @@ class PreguntasController extends Controller
         return response()->json(['mensaje' => 'Pregunta eliminada con éxito'], 200);
     }
 
+    // Funcion que retorna el array de todas las preguntas
+    public function getAllPreguntas(){
+        $preguntas = Pregunta::all();
+
+        return $preguntas;
+    }
+
+    // funcion para get una pregunta por su ID
+    public function getPreguntaById($id){
+        $pregunta = Pregunta::find($id);
+
+        return $pregunta;
+    }
+
 
 }
