@@ -21,10 +21,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::post('/crear-pregunta', [PreguntasController::class, 'crearPregunta']);
+Route::post('/añadir-pregunta', [PreguntasController::class, 'AñadirPregunta']);
 Route::post('/eliminar-pregunta', [PreguntasController::class, 'eliminarPregunta']);
 Route::get('/preguntas', [PreguntasController::class, 'getAllPreguntas']);
 Route::get('/pregunta/{id}', [PreguntasController::class, 'getSinglePregunta']);
+Route::post('/añadir-respuesta', [PreguntasController::class, 'AñadirRespuesta']);
+Route::post('/eliminar-respuesta', [PreguntasController::class, 'eliminarRespuesta']);
+Route::post('/get-respuestas-idpregunta', [PreguntasController::class, 'getRespuestasByIdPregunta']);
 
 
 // Mantener las rutas de autenticación (login y register)

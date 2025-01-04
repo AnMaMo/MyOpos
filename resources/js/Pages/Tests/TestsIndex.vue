@@ -49,11 +49,11 @@ function RecargarPagina() {
 
 // Funcion para mezclar un array
 function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]]; // Intercambia elementos
-  }
-  return array;
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]]; // Intercambia elementos
+    }
+    return array;
 }
 
 </script>
@@ -68,31 +68,40 @@ function shuffleArray(array) {
 <template>
 
     <GuestLayout>
-        
-        <!-- Apartado donde se muestra la pregunta y sus respuestas -->
-        <h3 class="text-xl font-bold">{{ preguntaActual.enunciado }}</h3>
-        <ol class="list-inside list-alpha pl-5">
-            <li v-for="respuesta in shuffleArray(preguntaActual.respuestas)" :id="respuesta.id"
-                class="cursor-pointer border w-11/12 p-3 rounded-md m-2 shadow"
-                :class="{ 'is-it': respuesta.correcta == 1 }" :data-id="preguntaActual.id"
-                @click="CorregirPregunta(respuesta.id, preguntaActual.id)">
-                {{ respuesta.respuesta }}
-            </li>
-        </ol>
 
-        <!-- Apartado explicacion de la pregunta -->
-        <div class="hidden" id="ExplicacionPregunta">
-            <h2 class="text-xl mt-5">Explicacion pregunta</h2>
-            <p>{{ preguntaActual.explicacion }}</p>
-        </div>
+        <!-- Si existe una pregunta actual -->
+        <div v-if="preguntaActual != null">
+            <!-- Apartado donde se muestra la pregunta y sus respuestas -->
+            <h3 class="text-xl font-bold">{{ preguntaActual.enunciado }}</h3>
+            <ol class="list-inside list-alpha pl-5">
+                <li v-for="respuesta in shuffleArray(preguntaActual.respuestas)" :id="respuesta.id"
+                    class="cursor-pointer border w-11/12 p-3 rounded-md m-2 shadow"
+                    :class="{ 'is-it': respuesta.correcta == 1 }" :data-id="preguntaActual.id"
+                    @click="CorregirPregunta(respuesta.id, preguntaActual.id)">
+                    {{ respuesta.respuesta }}
+                </li>
+            </ol>
 
-        <!-- Boton pagina siguiente Test -->
-        <div class="flex mt-10">
-            <div class="m-auto text-center">
-                <PrimaryButton @click="RecargarPagina()">Siguiente pregunta</PrimaryButton>
+            <!-- Apartado explicacion de la pregunta -->
+            <div class="hidden" id="ExplicacionPregunta">
+                <h2 class="text-xl mt-5">Explicacion pregunta</h2>
+                <p>{{ preguntaActual.explicacion }}</p>
             </div>
 
-        </div>
+            <!-- Boton pagina siguiente Test -->
+            <div class="flex mt-10">
+                <div class="m-auto text-center">
+                    <PrimaryButton @click="RecargarPagina()">Siguiente pregunta</PrimaryButton>
+                </div>
+            </div>
+
+            </div>
+            <!-- Si no hay pregunta actual, mostrar mensaje de fin de test -->
+            <div v-else>
+
+                <p class="text-center text-red-600">Actualmente no hay preguntas disponibles.</p>
+
+            </div>
 
 
     </GuestLayout>
