@@ -80,6 +80,7 @@ function añadirPregunta() {
         success: function (response) {
             RecargarPreguntas();
             preguntaSeleccionada.value = response.idPregunta;
+            RecargarRespuestas(0);
             showToast("Pregunta añadida correctamente.", "success");
             hideAddPreguntaModal();
         },
