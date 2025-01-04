@@ -35,6 +35,9 @@ const isAdmin = user?.rol === 1;
                                 <NavLink :href="route('Preguntas')" :active="route().current('Preguntas')">
                                     Preguntas
                                 </NavLink>
+                                <NavLink :href="route('Preguntas')" :active="route().current('Usuarios')">
+                                    Usuarios
+                                </NavLink>
                             </div>
                         </div>
 
@@ -93,8 +96,11 @@ const isAdmin = user?.rol === 1;
                 <div :class="{ block: showingNavigationDropdown, hidden: !showingNavigationDropdown }"
                     class="sm:hidden">
                     <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('Tests')" :active="route().current('Tests')">
-                            Tests
+                        <ResponsiveNavLink v-if="isAdmin" :href="route('Preguntas')" :active="route().current('Preguntas')">
+                            Preguntas
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink v-if="isAdmin" :href="route('Preguntas')" :active="route().current('Usuarios')">
+                            Usuarios
                         </ResponsiveNavLink>
                     </div>
 
