@@ -55,14 +55,7 @@
 
         </script>
 
-<script>
-        window.Laravel = {
-            csrfToken: "{{ csrf_token() }}"
-        };
-    </script>
-
-    <!-- Incluye tu archivo JS de Vue -->
-    <script src="{{ mix('js/app.js') }}"></script>
+        
     </head>
     <body class="font-sans antialiased">
         @inertia
