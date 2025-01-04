@@ -20,6 +20,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'rol'
     ];
 
     /**
@@ -43,5 +44,11 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // Funcion para get el rol del usuario
+    public function isAdmin()
+    {
+        return $this->rol;
     }
 }

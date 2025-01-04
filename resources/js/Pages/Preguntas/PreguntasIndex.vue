@@ -6,11 +6,13 @@ import { ref } from 'vue';
 
 // Definimos las propiedades que nos llegaran desde el controlador.
 const props = defineProps({
-    preguntas: Array
+    preguntas: Array,
+    rol: Number,
 });
 
 // Constantes de clases.
 const preguntas = ref(props.preguntas);
+const rol = ref(props.rol);
 const respuestas = ref([]);
 const isModaAddPreguntalVisible = ref(false);
 const isModaAddRespuestaVisible = ref(false);
@@ -20,6 +22,8 @@ const preguntaSeleccionada = ref(0);
  * Funcion que se ejecuta cuando la vista esta cargada
  */
 $(document).ready(function () {
+
+    console.log(rol.value);
 
     $('#tablaPreguntas').DataTable({
         "columns": [
@@ -31,11 +35,24 @@ $(document).ready(function () {
                 "render": function (data, type, row) {
                     return `
                     <button class="btn btn-danger" onclick="EliminarPregunta(${row.id})"><span class="material-symbols-outlined">delete</span></button>
-                    <button class="btn btn-danger" onclick="SeleccionarPregunta(${row.id})"><span class="material-symbols-outlined">settings</span></button>`;
+                    <button class="btn btn-danger" onclick="SeleccionarPregunta(${row.id})"><span class="material-symbols-outlined">reply</span></button>`;
                 }
             },
 
         ],
+        language: {
+            search: '', // Elimina el texto "Search"
+            searchPlaceholder: 'Buscar...', // Placeholder en el cuadro de búsqueda
+            info: 'Mostrando _START_ a _END_ de _TOTAL_ registros', // Cambia el texto "info"
+            infoEmpty: 'No hay registros disponibles', // Cuando no hay datos
+            infoFiltered: '(filtrado de _MAX_ registros totales)', // Para datos filtrados
+            paginate: {
+            first: 'Primero',
+            last: 'Último',
+            next: 'Siguiente',
+            previous: 'Anterior'
+        },
+        },
         "paging": true,
         "lengthChange": false,
         "searching": true,
@@ -298,10 +315,10 @@ function hideAddRespuestaModal() {
 
 <template>
 
-    <!--  <Head title="Preguntes" /> -->
+    <Head title="Preguntes" />
     <AuthenticatedLayout>
 
-        <div class="flex flex-col w-3/4 m-auto mt-5 mb-10 text-center">
+        <div class="flex flex-col w-3/4 m-auto mt-5 text-center pb-10">
 
             <div class="barraHerramientas flex items-center">
                 <!-- Título más grande -->
@@ -330,7 +347,7 @@ function hideAddRespuestaModal() {
 
             <div class="barraHerramientas flex items-center mt-10">
                 <!-- Título más grande -->
-                <h2 class="text-xl font-bold mr-4">Respuestas de: {{ preguntaSeleccionada }}</h2>
+                <h2 class="text-xl font-bold mr-4">Respuestas pregunta Nº: {{ preguntaSeleccionada }}</h2>
 
                 <!-- Botón para agregar preguntas -->
                 <PrimaryButton @click="showAddRespuestaModal" class="m-1 flex items-center">

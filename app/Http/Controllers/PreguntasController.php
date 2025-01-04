@@ -8,15 +8,23 @@ use Inertia\Inertia;
 
 class PreguntasController extends Controller
 {
+
     public function index()
     {
+
+        //Comprovacion para ver que el usuario tenga permisos
+        if (auth()->user()->isAdmin() !== 1) {
+            
+            return redirect()->route('Tests');
+        }
 
         // Cojemos todas las preguntas
         $preguntas = Pregunta::all();
 
         // Retornar la vista Inertia correcta
         return Inertia::render('Preguntas/PreguntasIndex', [
-            'preguntas' => $preguntas
+            'preguntas' => $preguntas,
+            'rol' => auth()->user()->isAdmin(),
         ]);
     }
 
@@ -66,12 +74,6 @@ class PreguntasController extends Controller
         //Mirar que la pregunta no tenga mas de 4 respuestas
         if ($pregunta->respuestas()->count() >= 4) {
             return response()->json(['mensaje' => 'false'], 201);
-        }
-        
-        $escorrecta = 0;
-
-        if($correcta == true){
-            $escorrecta = 1;
         }
 
         // Crear la respuesta
