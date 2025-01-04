@@ -24,6 +24,8 @@
 
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
+        <link rel="manifest" href="/manifest.json">
+
         <!-- Scripts -->
         @routes
         @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])

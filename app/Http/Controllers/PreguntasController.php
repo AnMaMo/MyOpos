@@ -68,13 +68,19 @@ class PreguntasController extends Controller
             return response()->json(['mensaje' => 'false'], 201);
         }
         
+        $escorrecta = 0;
+
+        if($correcta == true){
+            $escorrecta = 1;
+        }
+
         // Crear la respuesta
         $pregunta->respuestas()->create([
             'respuesta' => $respuesta,
             'correcta' => $correcta,
         ]);
 
-        return response()->json(['mensaje' => 'true'], 201);
+        return response()->json(['mensaje' => 'true', 'sasd' => $correcta], 201);
     }
 
     // Funcion para eliminar una pregunta

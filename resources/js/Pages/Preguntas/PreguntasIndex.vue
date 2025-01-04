@@ -181,6 +181,13 @@ function añadirRespuesta() {
     var correcta = document.getElementById("correcta").checked;
     var idPregunta = preguntaSeleccionada.value;
 
+    if (correcta == true) {
+        correcta = 1;
+    } else if (correcta == false) {
+        correcta = 0;
+    }
+
+
     // Peticion ajax que añada la respuesta a la pregunta seleccionada
     $.ajax({
         url: '/añadir-respuesta',
@@ -192,7 +199,7 @@ function añadirRespuesta() {
         },
         success: function (response) {
 
-            console.log(response.mensaje);
+            console.log(response.correcta);
 
             if (response.mensaje == "true") {
                 showToast("respuesta añadida correctamente.", "success");
