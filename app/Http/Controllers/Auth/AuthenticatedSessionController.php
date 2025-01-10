@@ -36,7 +36,7 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         // Regenera el token CSRF explícitamente
-        Session::regenerateToken();
+        //Session::regenerateToken();
 
         return redirect()->intended(route('Tests', absolute: false));
     }
