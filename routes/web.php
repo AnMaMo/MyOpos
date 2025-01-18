@@ -11,7 +11,7 @@ Route::get('/Tests', [TestsController::class, 'index'])
     ->name('Tests');
 
     Route::get('/', function () {
-        return redirect('/login');
+        return auth()->check() ? redirect('/Tests') : redirect('/login');
     });
 
 // Mantenimiento preguntas, carga el índice.
