@@ -24,10 +24,14 @@ function CorregirPregunta(respuesta, preguntaid) {
 
     if (respuestaDOM.classList.contains("is-it")) {
         respuestaDOM.style.backgroundColor = '#7ee279';
-        //Aqui
     } else {
         respuestaDOM.style.backgroundColor = '#ec6363';
-        $("#is-it").style.backgroundColor = '#7ee279';
+
+        // Marcamos la respuesta correcta en el DOM para que el usuario sepa cual es.
+        var respuestacorrect = document.getElementsByClassName("is-it");
+        for (let element of respuestacorrect) {
+            element.style.backgroundColor = '#7ee279';
+        }
     }
 
     // Seleccionar todos los elementos con el data-id igual a preguntaid
@@ -80,7 +84,8 @@ function shuffleArray(array) {
         </div>
 
         <!-- Si existe una pregunta actual -->
-        <div class="w-full sm:w-3/4 lg:w-1/2 m-auto mt-7 border rounded-lg shadow p-5 bg-white" v-if="preguntaActual != null">
+        <div class="w-full sm:w-3/4 lg:w-1/2 m-auto mt-7 border rounded-lg shadow p-5 bg-white"
+            v-if="preguntaActual != null">
             <!-- Apartado donde se muestra la pregunta y sus respuestas -->
             <h3 class="text-xl font-bold">{{ preguntaActual.id }}. {{ preguntaActual.enunciado }}</h3>
             <ol class="list-inside list-alpha">
@@ -104,7 +109,8 @@ function shuffleArray(array) {
                     <PrimaryButton class="text-2xl" @click="RecargarPagina()">Siguiente pregunta</PrimaryButton>
                 </div>
             </div>
-            <p class="m-auto mt-2 text-center text-gray-400 cursor-pointer" title="Reporta una incidencia amb aquesta pregunta">Incidencia</p>
+            <p class="m-auto mt-2 text-center text-gray-400 cursor-pointer"
+                title="Reporta una incidencia amb aquesta pregunta">Incidencia</p>
 
         </div>
         <!-- Si no hay pregunta actual, mostrar mensaje de fin de test -->
