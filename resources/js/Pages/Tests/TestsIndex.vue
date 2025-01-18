@@ -27,6 +27,7 @@ function CorregirPregunta(respuesta, preguntaid) {
         //Aqui
     } else {
         respuestaDOM.style.backgroundColor = '#ec6363';
+        $("#is-it").style.backgroundColor = '#7ee279';
     }
 
     // Seleccionar todos los elementos con el data-id igual a preguntaid
