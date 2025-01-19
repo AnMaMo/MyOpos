@@ -26,7 +26,6 @@ function CorregirPregunta(respuesta, preguntaid) {
         respuestaDOM.style.backgroundColor = '#7ee279';
     } else {
         respuestaDOM.style.backgroundColor = '#ec6363';
-
         // Marcamos la respuesta correcta en el DOM para que el usuario sepa cual es.
         var respuestacorrect = document.getElementsByClassName("is-it");
         for (let element of respuestacorrect) {

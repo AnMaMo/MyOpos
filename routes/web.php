@@ -26,8 +26,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post('/añadir-pregunta', [PreguntasController::class, 'AñadirPregunta']);
     Route::post('/eliminar-pregunta', [PreguntasController::class, 'eliminarPregunta']);
+    Route::post('/editar-pregunta', [PreguntasController::class, 'editarPregunta']);
+    Route::post('/editar-respuesta', [PreguntasController::class, 'editarRespuesta']);
     Route::get('/preguntas', [PreguntasController::class, 'getAllPreguntas']);
-    Route::get('/pregunta/{id}', [PreguntasController::class, 'getSinglePregunta']);
+    Route::get('/pregunta/{id}', [PreguntasController::class, 'getPreguntaById']);
+    Route::get('/respuesta/{id}', [PreguntasController::class, 'getRespuestaById']);
     Route::post('/añadir-respuesta', [PreguntasController::class, 'AñadirRespuesta']);
     Route::post('/eliminar-respuesta', [PreguntasController::class, 'eliminarRespuesta']);
     Route::post('/get-respuestas-idpregunta', [PreguntasController::class, 'getRespuestasByIdPregunta']);

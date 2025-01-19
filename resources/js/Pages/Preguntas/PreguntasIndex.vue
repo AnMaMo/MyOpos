@@ -17,6 +17,8 @@ const respuestas = ref([]);
 const isModaAddPreguntalVisible = ref(false);
 const isModaAddRespuestaVisible = ref(false);
 const preguntaSeleccionada = ref(0);
+const preguntaIdEdit = ref(0);
+const respuestaIdEdit = ref(0);
 
 /**
  * Funcion que se ejecuta cuando la vista esta cargada
@@ -35,7 +37,8 @@ $(document).ready(function () {
                 "render": function (data, type, row) {
                     return `
                     <button class="btn btn-danger" onclick="EliminarPregunta(${row.id})"><span class="material-symbols-outlined">delete</span></button>
-                    <button class="btn btn-danger" onclick="SeleccionarPregunta(${row.id})"><span class="material-symbols-outlined">reply</span></button>`;
+                    <button class="btn btn-danger" onclick="SeleccionarPregunta(${row.id})"><span class="material-symbols-outlined">reply</span></button>
+                    <button class="btn btn-danger" onclick="EditarPreguntaModal(${row.id})"><span class="material-symbols-outlined">edit</span></button>`;
                 }
             },
 
@@ -47,11 +50,11 @@ $(document).ready(function () {
             infoEmpty: 'No hay registros disponibles', // Cuando no hay datos
             infoFiltered: '(filtrado de _MAX_ registros totales)', // Para datos filtrados
             paginate: {
-            first: 'Primero',
-            last: 'Último',
-            next: 'Siguiente',
-            previous: 'Anterior'
-        },
+                first: 'Primero',
+                last: 'Último',
+                next: 'Siguiente',
+                previous: 'Anterior'
+            },
         },
         "paging": true,
         "lengthChange": false,
@@ -109,6 +112,86 @@ function añadirPregunta() {
 }
 
 /**
+ * Function editarpregunta
+ */
+
+function EditarPregunta() {
+    var enunciado = $("#enunciado").val();
+    var explicacion = $("#explicacion").val();
+    var idPregunta = preguntaIdEdit.value;
+
+    // Validaciones
+    if (enunciado === "") {
+        showToast("Debes introducir un enunciado.", "error");
+        return;
+    }
+    if (explicacion === "") {
+        showToast("Debes introducir una explicacion.", "error");
+        return;
+    }
+
+    // Ajax para editar una pregunta en la BBDD
+    $.ajax({
+        url: '/editar-pregunta',
+        type: 'POST',
+        data: {
+            idPregunta: idPregunta,
+            enunciado: enunciado,
+            explicacion: explicacion
+        },
+        success: function (response) {
+            RecargarPreguntas();
+            RecargarRespuestas(0);
+            showToast("Pregunta editada correctamente.", "success");
+            hideAddPreguntaModal();
+        },
+        error: function (xhr) {
+            // Maneja el error aquí
+            console.error(xhr.responseText);
+        }
+    });
+}
+
+/**
+ * Funcion editarRespuesta
+ */
+function EditarRespuesta(){
+    var respuesta = $("#respuesta").val();
+    var correcta = $("#correcta").prop("checked") ? 1 : 0;
+    var idRespuesta = respuestaIdEdit.value;
+    var idPregunta = preguntaSeleccionada.value;
+
+    // Validaciones
+    if (respuesta === "") {
+        showToast("Debes introducir una respuesta.", "error");
+        return;
+    }
+
+    // Ajax para editar una respuesta en la BBDD
+    $.ajax({
+        url: '/editar-respuesta',
+        type: 'POST',
+        data: {
+            idRespuesta: idRespuesta,
+            respuesta: respuesta,
+            correcta: correcta,
+        },
+        success: function (response) {
+            preguntaSeleccionada.value = idPregunta;
+            RecargarRespuestas(idPregunta);
+            showToast("Respuesta editada correctamente.", "success");
+            hideAddRespuestaModal();
+        },
+        error: function (xhr) {
+            // Maneja el error aquí
+            console.error(xhr.responseText);
+        }
+    });
+
+}
+
+
+/**
  * Funcion Eliminar pregunta, Elimina una pregunta de la BBDD.
  * @param idpregunta 
  */
@@ -131,6 +214,56 @@ window.EliminarPregunta = function (idpregunta) {
         }
     });
 
+}
+
+/**
+ * Crear preguntamodal
+ * @param idPregunta 
+ */
+function CrearPreguntaModal(idPregunta) {
+    // Cambiamos el titulo del modal de preguntas
+    $("#ModalPreguntaTitulo").text("Crear Pregunta");
+
+    showAddPreguntaModal();
+
+    // Mostramos el modal de crear y escondemos el de editar.
+    $("#modalpreguntaeditarbtn").addClass("hidden");
+    $("#modalpreguntacrearbtn").removeClass("hidden");
+
+}
+
+
+/**
+ * Funcion Editar pregunta Modal, abre el modal cargando los datos de la pregunta
+ */
+window.EditarPreguntaModal = function (idPregunta) {
+    $.ajax({
+        url: `/pregunta/${idPregunta}`, // Ruta con el ID en la URL
+        type: 'GET', // Método HTTP
+        success: function (response) {
+
+            preguntaIdEdit.value = response.id;
+
+            //Rellenamos los campos del modal
+            $("#enunciado").val(response.enunciado);
+            $("#explicacion").val(response.explicacion);
+
+            // Cambiamos el titulo del modal de preguntas
+            $("#ModalPreguntaTitulo").text("Editar Pregunta");
+
+            // Mostramos el modal de editar y escondemos el de crear.
+            showAddPreguntaModal();
+
+            // Abrimos el modal de crear pregunta y mostramos el boton de editar, y escondemos el de crear.
+            $("#modalpreguntaeditarbtn").removeClass("hidden");
+            $("#modalpreguntacrearbtn").addClass("hidden");
+
+        },
+        error: function (xhr) {
+            console.error("Error al obtener la pregunta:", xhr.responseText);
+            alert("No se pudo obtener la pregunta.");
+        }
+    });
 }
 
 /**
@@ -180,6 +313,7 @@ function showAddPreguntaModal() {
  */
 function hideAddPreguntaModal() {
     isModaAddPreguntalVisible.value = false;
+    preguntaIdEdit.value = -1;
     // Resetear los inputs
     $("#enunciado").val("");
     $("#explicacion").val("");
@@ -287,6 +421,49 @@ function RecargarRespuestas(idPregunta) {
     });
 }
 
+
+function crearRespuestaModal() {
+
+    // Cambiamos el titulo del modal de preguntas
+    $("#ModalRespuestaTitulo").text("Añadir Respuesta");
+
+    showAddRespuestaModal();
+
+    // Mostramos el modal de crear y escondemos el de editar.
+    $("#modalrespuestaeditarbtn").addClass("hidden");
+    $("#modalrespuestacrearbtn").removeClass("hidden");
+}
+
+function EditarRespuestaModal(idRespuesta) {
+    $.ajax({
+        url: `/respuesta/${idRespuesta}`,
+        type: 'GET',
+        success: function (response) {
+
+
+            respuestaIdEdit.value = response.id;
+            document.getElementById("correcta").checked = response.correcta;
+            document.getElementById("respuesta").value = response.respuesta;
+
+            // Cambiamos el titulo del modal de preguntas
+            $("#ModalRespuestaTitulo").text("Editar Respuesta");
+
+            showAddRespuestaModal();
+
+            // Mostramos el boton de crear y escondemos el de editar.
+            $("#modalrespuestaeditarbtn").removeClass("hidden");
+            $("#modalrespuestacrearbtn").addClass("hidden");
+
+        },
+        error: function (xhr) {
+            console.error("Error al obtener la respuesta:", xhr.responseText);
+            alert("No se pudo obtener la respuesta.");
+        }
+    });
+
+}
+
+
 /**
  * Funcion Show Add Respuesta Modal, muestra el modal de añadir una pregunta.
  */
@@ -325,7 +502,7 @@ function hideAddRespuestaModal() {
                 <h2 class="text-xl font-bold mr-4">Listado de Preguntas</h2>
 
                 <!-- Botón para agregar preguntas -->
-                <PrimaryButton @click="showAddPreguntaModal" class="m-1 flex items-center">
+                <PrimaryButton @click="CrearPreguntaModal()" class="m-1 flex items-center">
                     <span class="material-symbols-outlined">add</span>
                     <span class="ml-2">Agregar Pregunta</span>
                 </PrimaryButton>
@@ -349,8 +526,8 @@ function hideAddRespuestaModal() {
                 <!-- Título más grande -->
                 <h2 class="text-xl font-bold mr-4">Respuestas pregunta Nº: {{ preguntaSeleccionada }}</h2>
 
-                <!-- Botón para agregar preguntas -->
-                <PrimaryButton @click="showAddRespuestaModal" class="m-1 flex items-center">
+                <!-- Botón para agregar respuestas -->
+                <PrimaryButton @click="crearRespuestaModal()" class="m-1 flex items-center">
                     <span class="material-symbols-outlined">add</span>
                     <span class="ml-2">Agregar Respuesta</span>
                 </PrimaryButton>
@@ -373,6 +550,8 @@ function hideAddRespuestaModal() {
                             <td>
                                 <button @click="removeRespuesta(respuesta.id)"><span
                                         class="material-symbols-outlined">delete</span></button>
+                                <button @click="EditarRespuestaModal(respuesta.id)"><span
+                                        class="material-symbols-outlined">edit</span></button>
                             </td>
                         </tr>
                     </tbody>
@@ -388,7 +567,7 @@ function hideAddRespuestaModal() {
 
                 <!-- Formulario para crear una pregunta -->
                 <div id="formularioCrearPregunta">
-                    <h2 class="text-2xl text-left mt-5">Crear Pregunta</h2>
+                    <h2 id="ModalPreguntaTitulo" class="text-2xl text-left">Crear Pregunta</h2>
                     <div class="w-auto flex flex-col">
                         <!-- Enunciado de pregunta -->
                         <label for="enunciado" class="text-left mt-3">Enunciado</label>
@@ -402,15 +581,23 @@ function hideAddRespuestaModal() {
 
                 </div>
 
-                <!-- Botón para cerrar el modal -->
+                <!-- Botón para cerrar el modal-->
                 <div class="mt-4 text-center">
-                    <button class="bg-gray-700 m-1 text-white px-4 py-2 rounded hover:bg-gray   -600"
+                    <!--  Crear pregunta -->
+                    <button id="modalpreguntacrearbtn"
+                        class="bg-gray-700 m-1 text-white px-4 py-2 rounded hover:bg-gray   -600"
                         @click="añadirPregunta()">Crear pregunta</button>
+                    <!-- Editar pregunta -->
+                    <button id="modalpreguntaeditarbtn"
+                        class="bg-gray-700 m-1 text-white px-4 py-2 rounded hover:bg-gray   -600"
+                        @click="EditarPregunta()">Editar pregunta</button>
                     <button @click="hideAddPreguntaModal()"
                         class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
                         Cerrar
                     </button>
                 </div>
+
+
 
             </div>
         </div>
@@ -422,15 +609,14 @@ function hideAddRespuestaModal() {
 
                 <!-- Apartado para introducir respuestas a la pregunta -->
                 <div id="ApartadoRespuestas">
-                    <h2 class="text-xl text-left mt-5">Respuestas de la pregunta</h2>
-
+                    <h2 id="ModalRespuestaTitulo" class="text-2xl text-left mb-1">Añadir Respuesta</h2>
                     <div class="flex flex-col">
                         <div class="w-auto flex flex-col">
                             <!-- Explicacion de la pregunta -->
                             <label for="respuesta" class="text-left">Respuesta</label>
                             <input name="respuesta" type="text" id="respuesta">
                         </div>
-                        <div class="w-auto flex flex-row items-center">
+                        <div class="w-auto flex flex-row items-center mt-1">
                             <!-- Entrada para marcar si es correcta -->
                             <label for="correcta" class="text-left">És correcta?</label>
                             <input name="correcta" type="checkbox" id="correcta" class="m-2">
@@ -440,8 +626,12 @@ function hideAddRespuestaModal() {
 
                 <!-- Botón para cerrar el modal -->
                 <div class="mt-4 text-center">
-                    <button class="bg-gray-700 m-1 text-white px-4 py-2 rounded hover:bg-gray   -600"
+                    <button id="modalrespuestacrearbtn"
+                        class="bg-gray-700 m-1 text-white px-4 py-2 rounded hover:bg-gray   -600"
                         @click="añadirRespuesta()">Añadir Respuesta</button>
+                    <button id="modalrespuestaeditarbtn"
+                        class="bg-gray-700 m-1 text-white px-4 py-2 rounded hover:bg-gray   -600"
+                        @click="EditarRespuesta()">Editar Respuesta</button>
                     <button @click="hideAddRespuestaModal()"
                         class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
                         Cerrar

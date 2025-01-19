@@ -64,7 +64,7 @@ const isAdmin = user?.rol === 1;
                                     <template #content>
                                         <DropdownLink :href="route('profile.edit')"> Perfil </DropdownLink>
                                         <DropdownLink :href="route('logout')" method="post" as="button">
-                                            Tancar sessiò
+                                            Cerrar sesión
                                         </DropdownLink>
                                     </template>
                                 </Dropdown>
@@ -116,7 +116,7 @@ const isAdmin = user?.rol === 1;
                         <div class="mt-3 space-y-1">
                             <ResponsiveNavLink :href="route('profile.edit')"> Perfil </ResponsiveNavLink>
                             <ResponsiveNavLink :href="route('logout')" method="post" as="button">
-                                Tancar sessiò
+                                Cerrar sesión
                             </ResponsiveNavLink>
                         </div>
                     </div>

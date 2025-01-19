@@ -134,6 +134,61 @@ class PreguntasController extends Controller
         return $pregunta;
     }
 
+    // funcion para get una respuesta por su ID
+    public function getRespuestaById($id){
+        $respuesta = Respuesta::find($id);
+
+        return $respuesta;
+    }
+
+    // Funcion para editar una pregunta
+    public function editarPregunta(Request $request){
+        // Validar que el ID de la pregunta esté presente
+        $request->validate([
+            'idPregunta' => 'required|integer|exists:preguntas,id',
+            'enunciado' => 'required|string',
+            'explicacion' => 'required|string'
+        ]);
+
+        // Obtener los datos del request
+        $enunciado = $request->input('enunciado');
+        $explicacion = $request->input('explicacion');
+
+        // Obtener la pregunta por su ID
+        $pregunta = Pregunta::find($request->input('idPregunta'));
+
+        // Editar los datos de la pregunta
+        $pregunta->enunciado = $enunciado;
+        $pregunta->explicacion = $explicacion;
+        $pregunta->save();
+
+        return response()->json(['mensaje' => 'Pregunta editada con éxito'], 200);
+    }
+
+    // Funcion para editar una respuesta
+    public function editarRespuesta(Request $request){
+        // Validar que el ID de la respuesta esté presente
+        $request->validate([
+            'idRespuesta' => 'required|integer|exists:respuestas,id',
+            'respuesta'=> 'required|string',
+            'correcta' => 'required|boolean'
+        ]);
+
+        // Obtener los datos del request
+        $respuesta = $request->input('respuesta');
+        $correcta = $request->input('correcta');
+
+        // Obtener la respuesta por su ID
+        $respuestaObj = Respuesta::find($request->input('idRespuesta'));
+
+        // Editar los datos de la respuesta
+        $respuestaObj->respuesta = $respuesta;
+        $respuestaObj->correcta = $correcta;
+        $respuestaObj->save();
+
+        return response()->json(['mensaje' => 'Respuesta editada con éxito'], 200);
+    }
+
     /**
      * Function para coger el listado de respuestas de una pregunta
      */
@@ -147,9 +202,6 @@ class PreguntasController extends Controller
         // Retornar las respuestas
         return response()->json($respuestas);
     }
-        /* $respuestas = Respuesta::where('id_pregunta', $idPregunta)->get();
-
-        // Retornar las respuestas
-        return response()->json($respuestas); */
+    
 
 }
