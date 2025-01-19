@@ -357,7 +357,6 @@ function removeRespuesta(idRespuesta) {
  * @param idPregunta
  */
 function RecargarRespuestas(idPregunta) {
-
     // 0 Para limpiar el listado.
     if (idPregunta == 0) {
         respuestas.value = [];
