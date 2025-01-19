@@ -20,7 +20,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'rol'
+        'rol',
+        'licencia',
+        'FechaContestacion',
+        'PreguntasContestadas'
     ];
 
     /**
@@ -50,5 +53,44 @@ class User extends Authenticatable
     public function isAdmin()
     {
         return $this->rol;
+    }
+
+    // Funcion para get la licencia del usuario
+    public function isPremium()
+    {
+        return $this->licencia;
+    }
+
+    // Funcion para get las fechas de contestacion del usuario
+    public function getContestacionDates()
+    {
+        return $this->FechaContestacion;
+    }
+
+    // Funcion para set fecha contestacion del usuario DD-MM-YYYY
+    public function setContestacionDate($date)
+    {
+        $this->FechaContestacion = $date;
+        $this->save();
+    }
+
+    // Funcion para get las preguntas contestadas del usuario
+    public function getContestadasPreguntas()
+    {
+        return $this->PreguntasContestadas;
+    }
+
+    // Funcion para añadir una pregunta contestada al usuario
+    public function addContestadaPregunta()
+    {
+        $this->PreguntasContestadas++;
+        $this->save();
+    }
+
+    // Funcion para resetear las preguntas contestadas al usuario
+    public function resetContestadasPreguntas()
+    {
+        $this->PreguntasContestadas = 0;
+        $this->save();
     }
 }

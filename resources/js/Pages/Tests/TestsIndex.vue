@@ -49,6 +49,16 @@ function CorregirPregunta(respuesta, preguntaid) {
     // Mostrar la explicacion de las preguntas
     document.getElementById("ExplicacionPregunta").classList.remove("hidden");
     document.getElementById("ExplicacionPregunta").classList.add("visible");
+
+    // Ajax para añadir uno en el contador de preguntas contestadas
+    $.ajax({
+        url: '/incrementarPregunta',
+        type: 'POST',
+        error: function (xhr) {
+            // Maneja el error aquí
+            console.error(xhr.responseText);
+        }
+    });
 }
 
 /**

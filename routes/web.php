@@ -10,6 +10,9 @@ Route::get('/', function () {
     return auth()->check() ? redirect('/Tests') : redirect('/login');
 });
 
+// AUTH
+Route::post('/register', [RegisteredUserController::class, 'store'])->name('register');
+
 // Middleware de Auth, se necesita estar logueado para entrar a todas las siguientes paginas.
 Route::middleware('auth')->group(function () {
     // TESTS
@@ -27,6 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/editar-pregunta', [PreguntasController::class, 'editarPregunta']);
     Route::get('/preguntas', [PreguntasController::class, 'getAllPreguntas']);
     Route::get('/pregunta/{id}', [PreguntasController::class, 'getPreguntaById']);
+    Route::post('/incrementarPregunta', [TestsController::class, 'incrementarContadorLicencia']);
 
     // RESPUESTAS
     Route::post('/editar-respuesta', [PreguntasController::class, 'editarRespuesta']);

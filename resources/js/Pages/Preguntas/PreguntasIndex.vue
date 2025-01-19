@@ -372,7 +372,6 @@ function RecargarRespuestas(idPregunta) {
             idPregunta: idPregunta
         },
         success: function (response) {
-            console.log(response);
             respuestas.value = response;
         },
         error: function (xhr) {
