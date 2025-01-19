@@ -4,13 +4,13 @@ import { Head } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { ref } from 'vue';
 
-// Definimos las propiedades que nos llegaran desde el controlador.
+// Props del Component.
 const props = defineProps({
     preguntas: Array,
     rol: Number,
 });
 
-// Constantes de clases.
+// Variables globales del Component.
 const preguntas = ref(props.preguntas);
 const rol = ref(props.rol);
 const respuestas = ref([]);
@@ -21,12 +21,12 @@ const preguntaIdEdit = ref(0);
 const respuestaIdEdit = ref(0);
 
 /**
- * Funcion que se ejecuta cuando la vista esta cargada
+ * Funcion que se ejecuta al cargar la vista.
+ * Cargara el datagrid de preguntas.
  */
 $(document).ready(function () {
 
-    console.log(rol.value);
-
+    // DataGrid de preguntas.
     $('#tablaPreguntas').DataTable({
         "columns": [
             { "data": "id" },
@@ -44,11 +44,11 @@ $(document).ready(function () {
 
         ],
         language: {
-            search: '', // Elimina el texto "Search"
-            searchPlaceholder: 'Buscar...', // Placeholder en el cuadro de búsqueda
-            info: 'Mostrando _START_ a _END_ de _TOTAL_ registros', // Cambia el texto "info"
-            infoEmpty: 'No hay registros disponibles', // Cuando no hay datos
-            infoFiltered: '(filtrado de _MAX_ registros totales)', // Para datos filtrados
+            search: '',
+            searchPlaceholder: 'Buscar...',
+            info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
+            infoEmpty: 'No hay registros disponibles',
+            infoFiltered: '(filtrado de _MAX_ registros totales)',
             paginate: {
                 first: 'Primero',
                 last: 'Último',
@@ -66,14 +66,15 @@ $(document).ready(function () {
         "pageLength": 5,
     });
 
+    // Cargamos el array de preguntas dentro del datagrid.
     RecargarPreguntas();
 });
-
 
 //#region Preguntas
 
 /**
- * Function Añadir pregunta, Añade una pregunta a la BBDD.
+ * Funcion usada para Añadir una pregunta nueva.
+ * Al inicio de la funcion, se accede a los datos necesarios, enunciado y explicación.
 */
 function añadirPregunta() {
     var enunciado = $("#enunciado").val();
@@ -112,9 +113,82 @@ function añadirPregunta() {
 }
 
 /**
- * Function editarpregunta
+ * Funcion usada para eliminar una pregunta de la BBDD.
+ * @param idpregunta Este parametro es la id de la pregunta que queremos eliminar.
  */
+ window.EliminarPregunta = function (idpregunta) {
 
+$.ajax({
+    url: '/eliminar-pregunta', // Cambia esta ruta a la ruta correcta para tu controlador
+    type: 'POST',
+    contentType: 'application/json', // Indica que los datos están en formato JSON
+    data: JSON.stringify({ id: idpregunta }), // Convierte los datos a JSON
+    success: function (response) {
+        RecargarPreguntas();
+        RecargarRespuestas(0);
+        showToast("Pregunta eliminada correctamente.", "success");
+
+    },
+    error: function (xhr) {
+        // Maneja el error aquí
+        console.error(xhr.responseText);
+    }
+});
+
+}
+
+/**
+ * Funcion usada para configurar y abrir el modal de edición de la pregunta,
+ * @param idPregunta Este parametro es el id de la pregunta que queremos editar.
+ */
+ window.EditarPreguntaModal = function (idPregunta) {
+    $.ajax({
+        url: `/pregunta/${idPregunta}`, // Ruta con el ID en la URL
+        type: 'GET', // Método HTTP
+        success: function (response) {
+
+            preguntaIdEdit.value = response.id;
+
+            //Rellenamos los campos del modal
+            $("#enunciado").val(response.enunciado);
+            $("#explicacion").val(response.explicacion);
+
+            // Cambiamos el titulo del modal de preguntas
+            $("#ModalPreguntaTitulo").text("Editar Pregunta");
+
+            // Mostramos el modal de editar y escondemos el de crear.
+            showAddPreguntaModal();
+
+            // Abrimos el modal de crear pregunta y mostramos el boton de editar, y escondemos el de crear.
+            $("#modalpreguntaeditarbtn").removeClass("hidden");
+            $("#modalpreguntacrearbtn").addClass("hidden");
+
+        },
+        error: function (xhr) {
+            console.error("Error al obtener la pregunta:", xhr.responseText);
+            alert("No se pudo obtener la pregunta.");
+        }
+    });
+}
+
+/**
+ * Funcion usada para configurar y abrir el modal de creacion de una nueva pregunta.
+ * @param idPregunta 
+ */
+ function CrearPreguntaModal(idPregunta) {
+    // Cambiamos el titulo del modal de preguntas
+    $("#ModalPreguntaTitulo").text("Crear Pregunta");
+
+    showAddPreguntaModal();
+
+    // Mostramos el modal de crear y escondemos el de editar.
+    $("#modalpreguntaeditarbtn").addClass("hidden");
+    $("#modalpreguntacrearbtn").removeClass("hidden");
+}
+
+/**
+ * Funcion usada para editar la pregunta, se editará la pregunta que estamos editando en el modal de edicion.
+ */
 function EditarPregunta() {
     var enunciado = $("#enunciado").val();
     var explicacion = $("#explicacion").val();
@@ -153,134 +227,20 @@ function EditarPregunta() {
 }
 
 /**
- * Funcion editarRespuesta
- */
-function EditarRespuesta(){
-    var respuesta = $("#respuesta").val();
-    var correcta = $("#correcta").prop("checked") ? 1 : 0;
-    var idRespuesta = respuestaIdEdit.value;
-    var idPregunta = preguntaSeleccionada.value;
-
-    // Validaciones
-    if (respuesta === "") {
-        showToast("Debes introducir una respuesta.", "error");
-        return;
-    }
-
-    // Ajax para editar una respuesta en la BBDD
-    $.ajax({
-        url: '/editar-respuesta',
-        type: 'POST',
-        data: {
-            idRespuesta: idRespuesta,
-            respuesta: respuesta,
-            correcta: correcta,
-        },
-        success: function (response) {
-            preguntaSeleccionada.value = idPregunta;
-            RecargarRespuestas(idPregunta);
-            showToast("Respuesta editada correctamente.", "success");
-            hideAddRespuestaModal();
-        },
-        error: function (xhr) {
-            // Maneja el error aquí
-            console.error(xhr.responseText);
-        }
-    });
-
-}
-
-
-/**
- * Funcion Eliminar pregunta, Elimina una pregunta de la BBDD.
- * @param idpregunta 
- */
-window.EliminarPregunta = function (idpregunta) {
-
-    $.ajax({
-        url: '/eliminar-pregunta', // Cambia esta ruta a la ruta correcta para tu controlador
-        type: 'POST',
-        contentType: 'application/json', // Indica que los datos están en formato JSON
-        data: JSON.stringify({ id: idpregunta }), // Convierte los datos a JSON
-        success: function (response) {
-            RecargarPreguntas();
-            RecargarRespuestas(0);
-            showToast("Pregunta eliminada correctamente.", "success");
-
-        },
-        error: function (xhr) {
-            // Maneja el error aquí
-            console.error(xhr.responseText);
-        }
-    });
-
-}
-
-/**
- * Crear preguntamodal
- * @param idPregunta 
- */
-function CrearPreguntaModal(idPregunta) {
-    // Cambiamos el titulo del modal de preguntas
-    $("#ModalPreguntaTitulo").text("Crear Pregunta");
-
-    showAddPreguntaModal();
-
-    // Mostramos el modal de crear y escondemos el de editar.
-    $("#modalpreguntaeditarbtn").addClass("hidden");
-    $("#modalpreguntacrearbtn").removeClass("hidden");
-
-}
-
-
-/**
- * Funcion Editar pregunta Modal, abre el modal cargando los datos de la pregunta
- */
-window.EditarPreguntaModal = function (idPregunta) {
-    $.ajax({
-        url: `/pregunta/${idPregunta}`, // Ruta con el ID en la URL
-        type: 'GET', // Método HTTP
-        success: function (response) {
-
-            preguntaIdEdit.value = response.id;
-
-            //Rellenamos los campos del modal
-            $("#enunciado").val(response.enunciado);
-            $("#explicacion").val(response.explicacion);
-
-            // Cambiamos el titulo del modal de preguntas
-            $("#ModalPreguntaTitulo").text("Editar Pregunta");
-
-            // Mostramos el modal de editar y escondemos el de crear.
-            showAddPreguntaModal();
-
-            // Abrimos el modal de crear pregunta y mostramos el boton de editar, y escondemos el de crear.
-            $("#modalpreguntaeditarbtn").removeClass("hidden");
-            $("#modalpreguntacrearbtn").addClass("hidden");
-
-        },
-        error: function (xhr) {
-            console.error("Error al obtener la pregunta:", xhr.responseText);
-            alert("No se pudo obtener la pregunta.");
-        }
-    });
-}
-
-/**
- * Funcion Seleccionar Pregunta, Selecciona una pregunta para cargar sus respuestas.
- * @param idPregunta 
+ * Funcion usada para seleccionar una pregunta, esto cargará el listado de respuestas de esa pregunta en el grid de respuestas.
+ * @param idPregunta Este parametro es la id de la pregunta que queremos seleccionar.
  */
 window.SeleccionarPregunta = function (idPregunta) {
 
-    // Aqui cargaremos las respuestas de la pregunta seleccionada
-    preguntaSeleccionada.value = idPregunta;
-    RecargarRespuestas(idPregunta);
+// Aqui cargaremos las respuestas de la pregunta seleccionada
+preguntaSeleccionada.value = idPregunta;
+RecargarRespuestas(idPregunta);
 }
 
 /**
- * Funcion Recargar Preguntas, recarga el grid de preguntas.
+ * Funcion usada para recargar el grid de preguntas.
  */
-function RecargarPreguntas() {
+ function RecargarPreguntas() {
     // Ajax para actualizar la lista de preguntas
     $.ajax({
         url: '/preguntas', // Cambia esta ruta a la ruta correcta para tu controlador
@@ -302,14 +262,14 @@ function RecargarPreguntas() {
 }
 
 /**
- * Funcion Show Add Pregunta Modal, muestra el modal de añadir una pregunta.
+ * Funcion usada para mostrar el modal de creacion o edicion de preguntas.
  */
 function showAddPreguntaModal() {
     isModaAddPreguntalVisible.value = true;
 }
 
 /**
- * Funcion Hide Add Pregunta Modal, muestra el modal de añadir una pregunta.
+ * Funcion usada para esconder el modal de creacion o edicion de preguntas.
  */
 function hideAddPreguntaModal() {
     isModaAddPreguntalVisible.value = false;
@@ -324,7 +284,7 @@ function hideAddPreguntaModal() {
 //#region Respuestas
 
 /**
- * Funcion para añadir una respuesta a una pregunta ya existente
+ * Funcion usada para añadir una respuesta a la pregunta seleccionada.
  */
 function añadirRespuesta() {
 
@@ -370,8 +330,8 @@ function añadirRespuesta() {
 }
 
 /**
- * Funcion para eliminar una respuesta
- * @param idRespuesta 
+ * Funcion usada para eliminar una respuesta de la pregunta seleccionada.
+ * @param idRespuesta Este parametro es la id de la respuesta que queremos eliminar.
  */
 function removeRespuesta(idRespuesta) {
     $.ajax({
@@ -392,6 +352,7 @@ function removeRespuesta(idRespuesta) {
 }
 
 /**
+ * Funcion usada para recargar el grid de respuestas, se usara después de cada 
  * Funcion recargar respuestas del grid de respuestas con la pregunta seleccionada.
  * @param idPregunta
  */
@@ -421,7 +382,9 @@ function RecargarRespuestas(idPregunta) {
     });
 }
 
-
+/**
+ * Funcion usada para configurar y abrir el modal de creacion de una nueva respuesta.
+ */
 function crearRespuestaModal() {
 
     // Cambiamos el titulo del modal de preguntas
@@ -434,6 +397,10 @@ function crearRespuestaModal() {
     $("#modalrespuestacrearbtn").removeClass("hidden");
 }
 
+/**
+ * Funcion usada para configurar y abrir el modal de edicion de una respuesta ya existente.
+ * @param idRespuesta Este parametro es el id de la respuesta que queremos editar.
+ */
 function EditarRespuestaModal(idRespuesta) {
     $.ajax({
         url: `/respuesta/${idRespuesta}`,
@@ -463,9 +430,8 @@ function EditarRespuestaModal(idRespuesta) {
 
 }
 
-
 /**
- * Funcion Show Add Respuesta Modal, muestra el modal de añadir una pregunta.
+ * Funcion usada para abrir el modal de edicion y creacion de respuestas.
  */
 function showAddRespuestaModal() {
     if (preguntaSeleccionada.value == 0) {
@@ -477,13 +443,52 @@ function showAddRespuestaModal() {
 }
 
 /**
- * Funcion Hide Add Respuesta Modal, muestra el modal de añadir una pregunta.
+ * Funcion usada para cerrar el modal de edicion y creacion de respuestas.
  */
 function hideAddRespuestaModal() {
     isModaAddRespuestaVisible.value = false;
     // Resetear los inputs
     document.getElementById("respuesta").value = "";
     document.getElementById("correcta").checked = false;
+}
+
+/**
+ * Funcion usada para editar una respuesta, se editara la respuesta seleccionada en el modal de edicion
+ * Funcion editarRespuesta
+ */
+ function EditarRespuesta(){
+    var respuesta = $("#respuesta").val();
+    var correcta = $("#correcta").prop("checked") ? 1 : 0;
+    var idRespuesta = respuestaIdEdit.value;
+    var idPregunta = preguntaSeleccionada.value;
+
+    // Validaciones
+    if (respuesta === "") {
+        showToast("Debes introducir una respuesta.", "error");
+        return;
+    }
+
+    // Ajax para editar una respuesta en la BBDD
+    $.ajax({
+        url: '/editar-respuesta',
+        type: 'POST',
+        data: {
+            idRespuesta: idRespuesta,
+            respuesta: respuesta,
+            correcta: correcta,
+        },
+        success: function (response) {
+            preguntaSeleccionada.value = idPregunta;
+            RecargarRespuestas(idPregunta);
+            showToast("Respuesta editada correctamente.", "success");
+            hideAddRespuestaModal();
+        },
+        error: function (xhr) {
+            // Maneja el error aquí
+            console.error(xhr.responseText);
+        }
+    });
+
 }
 
 //#endregion
@@ -559,7 +564,6 @@ function hideAddRespuestaModal() {
             </div>
         </div>
 
-
         <!-- Modal Añadir Pregunta -->
         <div v-show="isModaAddPreguntalVisible"
             class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
@@ -596,8 +600,6 @@ function hideAddRespuestaModal() {
                         Cerrar
                     </button>
                 </div>
-
-
 
             </div>
         </div>

@@ -10,8 +10,10 @@ use Inertia\Inertia;
 
 class TestsController extends Controller
 {
-    public function index()
-    {
+    /**
+     * Funcion principal que carga la vista de Tests, cargara una pregunta aleatoriamente.
+     */
+    public function index(){
         // Cojemos todas las preguntas de la BBDD que tengan por lo menos una respuesta.
         $preguntas = Pregunta::with('respuestas')->get();
         
@@ -23,4 +25,5 @@ class TestsController extends Controller
             'pregunta' => $preguntaAleatorias
         ]);
     }
+
 }
